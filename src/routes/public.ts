@@ -1,11 +1,10 @@
 import { Router } from "express";
-import { PrismaClient, User } from "@prisma/client";
-import UserControler from "../controllers/UserControler.ts";
+import UserController from "../controllers/UserController.ts";
 
 const prisma = new PrismaClient();
 const router = Router();
 
-router.get("/cadastro", UserControler.store);
+router.post("/cadastro", (req, res) => UserController.store(req, res));
 
 router.post("/login", async (req, res) => {
   try {
