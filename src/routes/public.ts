@@ -1,50 +1,11 @@
-import express from "express";
+import { Router } from "express";
 import { PrismaClient, User } from "@prisma/client";
-import { z } from "zod";
-import bcrypt from "bcryptjs";
+import UserControler from "../controllers/UserControler.ts";
 
 const prisma = new PrismaClient();
-const router = express.Router();
+const router = Router();
 
-const createUserSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters long"),
-  email: z.string().email("Invalid email").min(1, "Email is required"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-});
-
-router.post("/cadastro", async (req, res) => {
-  try {
-    const { name, email, password } = createUserSchema.parse(req.body);
-    const salt = bcrypt.genSaltSync(10)
-    const hashedPassword = bcrypt.hashSync(password, salt);
-
-    const userinDb = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
-    if (userinDb) {
-      res.status(400).json({
-        message: "User already exists",
-      });
-    }
-    const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
-    });
-    res.status(201).json(user);
-  } catch (error) {
-    if(error instanceof z.ZodError) {
-      const errorMessage = error.errors.map((error) => error.message).join(", ");
-      res.status(400).json({
-        message: errorMessage,
-      });
-    }
-    res.status(500).json({
-      message: "Internal server error",
-    });
-    console.log(error)
-  }
-});
+router.get("/cadastro", UserControler.store);
 
 router.post("/login", async (req, res) => {
   try {
@@ -55,7 +16,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const salt = bcrypt.genSaltSync(10)
+    const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
     const user = await prisma.user.findUnique({
       where: {
@@ -74,7 +35,6 @@ router.post("/login", async (req, res) => {
       });
     }
     res.status(200).json(user);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({
