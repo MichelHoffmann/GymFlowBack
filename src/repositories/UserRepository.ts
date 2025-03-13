@@ -22,6 +22,10 @@ class UserRepository {
         data: user
     })
   }
+
+  findAll() {
+    return prisma.user.findMany();
+  }
 }
 
 export default new UserRepository();
