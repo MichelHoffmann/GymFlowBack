@@ -3,13 +3,26 @@ import { Request, Response } from "express";
 import { createUserSchema } from "../shemas/UserSchema.ts";
 import { comparePassword, hashPassword } from "../services/bcryptJsService.ts";
 import UserRepository from "../repositories/UserRepository.ts";
+import { generateToken } from "../services/JwtService.ts";
 
 class UserController implements IUserController {
   async index(res: Response): Promise<Response> {
     const users = await UserRepository.findAll();
     return res.status(200).json(users);
   }
-  //   show();
+
+  async show(req: Request, res: Response): Promise<Response> {
+    const email = req.headers.authorization;
+    const user = await UserRepository.findByEmail(email as string);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json(user);
+  }
+
   async store(req: Request, res: Response): Promise<Response> {
     const hasErrorInSchema = createUserSchema.safeParse(req.body);
     if (!hasErrorInSchema.success) {
@@ -74,8 +87,12 @@ class UserController implements IUserController {
         });
       }
 
+      const token = generateToken(user.email);
+      console.log(token)
+
       return res.status(200).json({
         message: "Login successful",
+        token,
       });
     } catch (error) {
       console.error(error);
@@ -84,7 +101,6 @@ class UserController implements IUserController {
       });
     }
   }
-
 }
 
 export default new UserController();
