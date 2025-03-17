@@ -1,6 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../services/JwtService.ts";
 
+interface TokenPayload {
+  email: string;
+  iat: number;
+  exp: number;
+}
+
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
 
@@ -18,9 +24,8 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     });
     return;
   }
-
-  const decoded = JSON.stringify(verifyToken(token));
-  console.log(`TYPEOF DECODED: ${decoded}`);
+  
+  let decoded = verifyToken(token) as TokenPayload;
 
   if (!decoded) {
     res.status(401).json({
@@ -29,5 +34,6 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
+  req.headers['userEmail'] = decoded.email
   return next();
 };

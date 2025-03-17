@@ -12,7 +12,7 @@ class UserController implements IUserController {
   }
 
   async show(req: Request, res: Response): Promise<Response> {
-    const email = req.headers.authorization;
+    const email = req.headers.userEmail;
     const user = await UserRepository.findByEmail(email as string);
     if (!user) {
       return res.status(404).json({
@@ -20,7 +20,7 @@ class UserController implements IUserController {
       });
     }
 
-    return res.status(200).json(user);
+    return res.status(200).json(user.email);
   }
 
   async store(req: Request, res: Response): Promise<Response> {
@@ -88,7 +88,8 @@ class UserController implements IUserController {
       }
 
       const token = generateToken(user.email);
-      console.log(token)
+      console.log(`TOKEN: ${token}`)
+      console.log(`REQ.HEADERS.USEREMAIL: ${req.headers.userEmail}`)
 
       return res.status(200).json({
         message: "Login successful",

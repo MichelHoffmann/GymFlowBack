@@ -1,6 +1,5 @@
 import { Router } from "express";
 import UserController from "../controllers/UserController.ts";
-import { auth } from "../middlewares/auth.ts";
 
 const router = Router();
 
@@ -16,10 +15,6 @@ router.get('/allusers', async (req, res) => {
   await UserController.index(res);
 })
 
-router.get('/user/id', auth, async (req, res) => {
-  await UserController.show(req, res);
-})
-
 export default router;
 
 // michelHoffmann
@@ -27,3 +22,7 @@ export default router;
 // V0PTLQQKuTj0csNq
 
 //mongodb+srv://michelHoffmann:V0PTLQQKuTj0csNq@users.ya2go.mongodb.net/michelHoffmann?retryWrites=true&w=majority&appName=Users
+
+//SECRETE_KEY= 25a14632b08e37fcda4380bdc436ae8e7b247436ceca0e25c21c43158d3cd36f
+
+//GENERATE A SECRETE_KEY= node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
