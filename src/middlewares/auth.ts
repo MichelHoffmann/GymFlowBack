@@ -25,7 +25,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
   
-  let decoded = verifyToken(token) as TokenPayload;
+  const decoded = verifyToken(token) as TokenPayload;
 
   if (!decoded) {
     res.status(401).json({

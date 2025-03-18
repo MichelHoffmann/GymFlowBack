@@ -3,13 +3,14 @@ import publicRoutes from "./routes/public.ts";
 import privateRoutes from "./routes/private.ts";
 
 const app = express();
+const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json())
 app.use('/', publicRoutes)
 app.use('/', privateRoutes)
 
-app.listen(3000, () => {
-    console.log('🔥 Server is running on port 3000');
+app.listen(PORT, () => {
+  console.log("🔥 Server is running on port 3000");
 });
 
 export default app
