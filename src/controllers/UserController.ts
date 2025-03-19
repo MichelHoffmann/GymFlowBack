@@ -88,8 +88,8 @@ class UserController implements IUserController {
       }
 
       const token = generateToken(user.email);
-      console.log(`TOKEN: ${token}`)
-      console.log(`REQ.HEADERS.USEREMAIL: ${req.headers.userEmail}`)
+      //console.log(`TOKEN: ${token}`)
+      //console.log(`REQ.HEADERS.USEREMAIL: ${req.headers.userEmail}`)
 
       return res.status(200).json({
         message: "Login successful",
