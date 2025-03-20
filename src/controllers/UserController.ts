@@ -30,7 +30,7 @@ class UserController implements IUserController {
         .map((e) => `${e.path}: ${e.message}`)
         .join(", ");
       return res.status(400).json({
-        message: errorMessage,
+        message: `🔥${errorMessage}`,
       });
     }
 
@@ -41,7 +41,7 @@ class UserController implements IUserController {
 
       if (userinDb) {
         return res.status(400).json({
-          message: "User already exists",
+          message: "🔥Esse usuario já está cadastrado!",
         });
       }
 
@@ -56,7 +56,7 @@ class UserController implements IUserController {
     } catch (error) {
       console.log(error);
       return res.status(500).json({
-        message: "Internal server error",
+        message: "🔥Internal server error",
       });
     }
   }
@@ -67,7 +67,7 @@ class UserController implements IUserController {
       const { email, password } = req.body;
       if (!email || !password) {
         return res.status(400).json({
-          message: "Email and password are required",
+          message: "🔥Email e senha são necesssarios!"
         });
       }
 
@@ -75,7 +75,7 @@ class UserController implements IUserController {
 
       if (!user) {
         return res.status(400).json({
-          message: "User not found",
+          message: "🔥Email não cadastrado",
         });
       }
 
@@ -83,22 +83,20 @@ class UserController implements IUserController {
 
       if (!passwordIsCorrect) {
         return res.status(401).json({
-          message: "Invalid credentials",
+          message: "🔥Senha invalida",
         });
       }
 
       const token = generateToken(user.email);
-      //console.log(`TOKEN: ${token}`)
-      //console.log(`REQ.HEADERS.USEREMAIL: ${req.headers.userEmail}`)
 
       return res.status(200).json({
-        message: "Login successful",
+        message: "🔥Login concluido!",
         token,
       });
     } catch (error) {
       console.error(error);
       return res.status(500).json({
-        message: "Internal server error",
+        message: "🔥Internal server error",
       });
     }
   }
