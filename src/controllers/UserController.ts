@@ -20,7 +20,7 @@ class UserController implements IUserController {
       });
     }
 
-    return res.status(200).json(user.email);
+    return res.status(200).json(user);
   }
 
   async store(req: Request, res: Response): Promise<Response> {
