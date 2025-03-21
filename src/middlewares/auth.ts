@@ -20,7 +20,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
   const token = authHeader.split(" ")[1];
   if (!token) {
     res.status(401).json({
-      message: "Unauthorized",
+      message: "Unauthorized - No token provided",
     });
     return;
   }
@@ -29,7 +29,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 
   if (!decoded) {
     res.status(401).json({
-      message: "Unauthorized",
+      message: "Invalid token",
     });
     return;
   }
