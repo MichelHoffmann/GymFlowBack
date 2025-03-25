@@ -103,9 +103,15 @@ class UserController implements IUserController {
   async addMeta(req: Request, res: Response): Promise<Response> {
     const { email, meta } = req.body;
     const user = await UserRepository.findByEmail(email);
-    if (typeof meta !== "number" || meta < 0 || meta > 60) {
+    if (typeof meta !== "number") {
       return res.status(400).json({
-        message: "🔥Meta deve ser um número entre 0 e 60",
+        message: "🔥Meta deve ser um número",
+      });
+    }
+
+    if (meta < 0 || meta > 60) {
+      return res.status(400).json({
+        message: "🔥Meta deve ser maior que 0 e menor que 61",
       });
     }
 
