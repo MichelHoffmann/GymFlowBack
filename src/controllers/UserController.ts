@@ -60,8 +60,7 @@ class UserController implements IUserController {
       });
     }
   }
-  //   update();
-  //   destroy();
+
   async login(req: Request, res: Response): Promise<Response> {
     try {
       const { email, password } = req.body;
@@ -99,6 +98,42 @@ class UserController implements IUserController {
         message: "🔥Internal server error",
       });
     }
+  }
+
+  async addMeta(req: Request, res: Response): Promise<Response> {
+    const { email, meta } = req.body;
+    const user = await UserRepository.findByEmail(email);
+    if (typeof meta !== "number" || meta < 0 || meta > 60) {
+      return res.status(400).json({
+        message: "🔥Meta deve ser um número entre 0 e 60",
+      });
+    }
+
+    try {
+      if (!user) {
+        return res.status(404).json({
+          message: "🔥Usuário não encontrado",
+        });
+      }
+
+      const userUpdated = await UserRepository.updateMeta(email, meta);
+
+      return res.status(200).json({
+        message: "🔥Meta atualizada com sucesso!",
+        user: {
+          name: userUpdated.name,
+          email: userUpdated.email,
+          meta: userUpdated.meta,
+          runs: userUpdated.runningHistory || [],
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "🔥Erro ao atualizar meta",
+        error
+      });
+    }
+
   }
 }
 

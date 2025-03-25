@@ -26,6 +26,17 @@ class UserRepository {
   findAll() {
     return prisma.user.findMany();
   }
+
+  updateMeta(email: string, meta: number) {
+    return prisma.user.update({
+      where: {
+        email
+      },
+      data: {
+        meta
+      }
+    })
+  }
 }
 
 export default new UserRepository();
