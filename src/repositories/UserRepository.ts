@@ -1,26 +1,30 @@
 import { PrismaClient } from "@prisma/client";
+import { JsonValue } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
 
 interface IUser {
+  id?: string;
   name: string;
   email: string;
   password: string;
+  meta?: number | null;
+  runningHistory?: JsonValue;
 }
 
 class UserRepository {
   findByEmail(email: string) {
     return prisma.user.findUnique({
       where: {
-        email
+        email,
       },
     });
   }
 
-  createUser(user: IUser){
+  createUser(user: IUser) {
     return prisma.user.create({
-        data: user
-    })
+      data: user,
+    });
   }
 
   findAll() {
@@ -28,14 +32,20 @@ class UserRepository {
   }
 
   updateMeta(email: string, meta: number) {
-    return prisma.user.update({
-      where: {
-        email
-      },
-      data: {
-        meta
-      }
-    })
+    try {
+      const user = prisma.user.update({
+        where: {
+          email: email,
+        },
+        data: {
+          meta: meta,
+        },
+      });
+      return user
+    } catch (error) {
+      console.log(`ERR REPOSITORY: ${error}`);
+      return error;
+    }
   }
 }
 

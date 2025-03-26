@@ -143,13 +143,14 @@ class UserController implements IUserController {
       }
 
       const userUpdated = await UserRepository.updateMeta(email, meta);
-      console.log(userUpdated);
 
       if (!userUpdated) {
         return res.status(400).json({
           message: "🔥Não foi possivel atualizar a meta do usuario",
         });
       }
+
+      console.log(userUpdated)
 
       return res.status(200).json({
         message: "🔥Meta atualizada com sucesso!",
