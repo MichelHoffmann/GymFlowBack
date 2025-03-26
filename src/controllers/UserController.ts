@@ -4,6 +4,7 @@ import { createUserSchema } from "../shemas/UserSchema.ts";
 import { comparePassword, hashPassword } from "../services/bcryptJsService.ts";
 import UserRepository from "../repositories/UserRepository.ts";
 import { generateToken } from "../services/JwtService.ts";
+import { Prisma } from "@prisma/client";
 
 class UserController implements IUserController {
   async index(res: Response): Promise<Response> {
@@ -142,6 +143,7 @@ class UserController implements IUserController {
       }
 
       const userUpdated = await UserRepository.updateMeta(email, meta);
+      console.log(userUpdated);
 
       if (!userUpdated) {
         return res.status(400).json({
@@ -159,13 +161,23 @@ class UserController implements IUserController {
         },
       });
     } catch (error) {
+      console.error("Erro detalhado:", error);
+
+      // Se for um erro do Prisma, adicione mais detalhes
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return res.status(500).json({
+          message: "🔥Erro de banco de dados",
+          code: error.code,
+          details: error.meta,
+        });
+      }
+
       return res.status(500).json({
         message: "🔥Erro ao atualizar meta",
-        error
+        error: error
       });
     }
 
-  }
-}
+  }}
 
 export default new UserController();
