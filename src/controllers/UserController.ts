@@ -102,7 +102,24 @@ class UserController implements IUserController {
 
   async addMeta(req: Request, res: Response): Promise<Response> {
     const { email, meta } = req.body;
-    const user = await UserRepository.findByEmail(email);
+    if (!email) {
+      return res.status(400).json({
+        message: "🔥Email é obrigatorio!",
+      });
+    }
+
+    if (typeof email !== "string") {
+      return res.status(400).json({
+        message: "🔥Email deve ser do tipo string!",
+      });
+    }
+
+    if (!meta) {
+      return res.status(400).json({
+        message: "🔥Meta é obrigatorio!",
+      });
+    }
+
     if (typeof meta !== "number") {
       return res.status(400).json({
         message: "🔥Meta deve ser um número",
@@ -115,6 +132,8 @@ class UserController implements IUserController {
       });
     }
 
+    const user = await UserRepository.findByEmail(email);
+
     try {
       if (!user) {
         return res.status(404).json({
@@ -123,6 +142,12 @@ class UserController implements IUserController {
       }
 
       const userUpdated = await UserRepository.updateMeta(email, meta);
+
+      if (!userUpdated) {
+        return res.status(400).json({
+          message: "🔥Não foi possivel atualizar a meta do usuario",
+        });
+      }
 
       return res.status(200).json({
         message: "🔥Meta atualizada com sucesso!",
