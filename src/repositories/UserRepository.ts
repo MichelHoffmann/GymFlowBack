@@ -1,16 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import { JsonValue } from "@prisma/client/runtime/library";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { IUser } from "../controllers/protocols.ts";
 
 const prisma = new PrismaClient();
-
-interface IUser {
-  id?: string;
-  name: string;
-  email: string;
-  password: string;
-  meta?: number | null;
-  runningHistory?: JsonValue;
-}
 
 class UserRepository {
   findByEmail(email: string) {
@@ -31,20 +22,16 @@ class UserRepository {
     return prisma.user.findMany();
   }
 
-  updateMeta(email: string, meta: number) {
+  async updateMeta(email: string, meta: number): Promise<IUser | null> {
     try {
-      const user = prisma.user.update({
-        where: {
-          email: email,
-        },
-        data: {
-          meta: meta,
-        },
-      });
-      return user
+      const user = await prisma.user.update({
+        where: { email },
+        data: { meta } as Prisma.UserUpdateInput
+      })
+      return user as IUser
     } catch (error) {
       console.log(`ERR REPOSITORY: ${error}`);
-      return error;
+      return null
     }
   }
 }

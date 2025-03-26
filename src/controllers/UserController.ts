@@ -1,4 +1,4 @@
-import { IUserController } from "./protocols.ts";
+import { IUserController, IUser } from "./protocols.ts";
 import { Request, Response } from "express";
 import { createUserSchema } from "../shemas/UserSchema.ts";
 import { comparePassword, hashPassword } from "../services/bcryptJsService.ts";
@@ -142,7 +142,7 @@ class UserController implements IUserController {
         });
       }
 
-      const userUpdated = await UserRepository.updateMeta(email, meta);
+      const userUpdated = await UserRepository.updateMeta(email, meta)
 
       if (!userUpdated) {
         return res.status(400).json({
