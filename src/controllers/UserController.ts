@@ -133,51 +133,56 @@ class UserController implements IUserController {
       });
     }
 
+    console.log(`USERUPDATED ANTES`)
+    console.log(email)
     const user = await UserRepository.findByEmail(email);
+    console.log(`USERUPDATED DEPOIS:`, user)
+    
+    return res.status(200).json({message: "FOI CARALHO!!!!"})
 
-    try {
-      if (!user) {
-        return res.status(404).json({
-          message: "🔥Usuário não encontrado",
-        });
-      }
 
-      const userUpdated = await UserRepository.updateMeta(email, meta)
+    // try {
+      // if (!user) {
+      //   return res.status(404).json({
+      //     message: "🔥Usuário não encontrado",
+      //   });
+      // }
 
-      if (!userUpdated) {
-        return res.status(400).json({
-          message: "🔥Não foi possivel atualizar a meta do usuario",
-        });
-      }
+      // const userUpdated = await UserRepository.updateMeta(email, meta)
+      // console.log(`USERUPDATED`, userUpdated)
 
-      console.log(userUpdated)
+      // if (!userUpdated) {
+      //   return res.status(400).json({
+      //     message: "🔥Não foi possivel atualizar a meta do usuario",
+      //   });
+      // }
 
-      return res.status(200).json({
-        message: "🔥Meta atualizada com sucesso!",
-        user: {
-          name: userUpdated.name,
-          email: userUpdated.email,
-          meta: userUpdated.meta,
-          runs: userUpdated.runningHistory || [],
-        },
-      });
-    } catch (error) {
-      console.error("Erro detalhado:", error);
+      // return res.status(200).json({
+      //   message: "🔥Meta atualizada com sucesso!",
+      //   user: {
+      //     name: userUpdated.name,
+      //     email: userUpdated.email,
+      //     meta: userUpdated.meta,
+      //     runs: userUpdated.runningHistory || [],
+      //   },
+      // });
+    // } catch (error) {
+    //   console.error("Erro detalhado:", error);
 
-      // Se for um erro do Prisma, adicione mais detalhes
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        return res.status(500).json({
-          message: "🔥Erro de banco de dados",
-          code: error.code,
-          details: error.meta,
-        });
-      }
+    //   // Se for um erro do Prisma, adicione mais detalhes
+    //   if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    //     return res.status(500).json({
+    //       message: "🔥Erro de banco de dados",
+    //       code: error.code,
+    //       details: error.meta,
+    //     });
+    //   }
 
-      return res.status(500).json({
-        message: "🔥Erro ao atualizar meta",
-        error: error
-      });
-    }
+    //   return res.status(500).json({
+    //     message: "🔥Erro ao atualizar meta",
+    //     error: error
+    //   });
+    // }
 
   }}
 

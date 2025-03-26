@@ -5,11 +5,8 @@ const prisma = new PrismaClient();
 
 class UserRepository {
   findByEmail(email: string) {
-    return prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
+    console.log(`EMAIL:`, email)
+    return prisma.user.findUnique({where: {email}});
   }
 
   createUser(user: IUser) {
@@ -28,9 +25,9 @@ class UserRepository {
         where: { email },
         data: { meta } as Prisma.UserUpdateInput
       })
+      console.log('USER', user)
       return user as IUser
     } catch (error) {
-      console.log(`ERR REPOSITORY: ${error}`);
       return null
     }
   }
