@@ -19,15 +19,16 @@ class UserController implements IUserController {
         message: "User not found",
       });
     }
-    console.log(user)
+    
+    const userToReturn = {
+      name: user.name,
+      email: user.email,
+      meta: user.meta,
+      runs: user.runningHistory || [],
+    };
 
     return res.status(200).json({
-      user: {
-        name: user.name,
-        email: user.email,
-        meta: user.meta,
-        runs: user.runningHistory || [],
-      }
+      user: userToReturn
     });
   }
 
