@@ -25,7 +25,7 @@ class UserController implements IUserController {
       user: {
         name: user.name,
         email: user.email,
-        meta: user.meta || null,
+        meta: user.meta,
         runs: user.runningHistory || [],
       }
     });
