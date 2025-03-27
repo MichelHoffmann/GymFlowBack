@@ -4,7 +4,6 @@ import { createUserSchema } from "../shemas/UserSchema.ts";
 import { comparePassword, hashPassword } from "../services/bcryptJsService.ts";
 import UserRepository from "../repositories/UserRepository.ts";
 import { generateToken } from "../services/JwtService.ts";
-import { Prisma } from "@prisma/client";
 
 class UserController implements IUserController {
   async index(res: Response): Promise<Response> {
@@ -12,7 +11,7 @@ class UserController implements IUserController {
     return res.status(200).json(users);
   }
 
-  async show(req: Request, res: Response): Promise<Response> {
+  async show(req: Request, res: Response): Promise<Response<IUser>> {
     const email = req.headers.userEmail;
     const user = await UserRepository.findByEmail(email as string);
     if (!user) {
@@ -21,7 +20,14 @@ class UserController implements IUserController {
       });
     }
 
-    return res.status(200).json(user);
+    return res.status(200).json({
+      user: {
+        name: user.name,
+        email: user.email,
+        meta: user.meta,
+        runs: user.runningHistory || [],
+      }
+    });
   }
 
   async store(req: Request, res: Response): Promise<Response> {
