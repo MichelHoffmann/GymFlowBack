@@ -1,17 +1,17 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { IUser } from "../controllers/protocols.ts";
 
 const prisma = new PrismaClient();
 
 class UserRepository {
   findByEmail(email: string) {
-    console.log(`EMAIL:`, email)
-    return prisma.user.findUnique({where: {email}});
+    return prisma.user.findUnique({ where: { email } });
   }
 
   createUser(user: IUser) {
+    const { name, email, password } = user;
     return prisma.user.create({
-      data: user,
+      data: { name, email, password },
     });
   }
 
@@ -19,17 +19,11 @@ class UserRepository {
     return prisma.user.findMany();
   }
 
-  async updateMeta(email: string, meta: number): Promise<IUser | null> {
-    try {
-      const user = await prisma.user.update({
-        where: { email },
-        data: { meta } as Prisma.UserUpdateInput
-      })
-      console.log('USER', user)
-      return user as IUser
-    } catch (error) {
-      return null
-    }
+  async updateMeta(email: string, meta: number) {
+    return prisma.user.update({
+      where: { email },
+      data: { meta },
+    });
   }
 }
 

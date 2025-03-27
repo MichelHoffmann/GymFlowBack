@@ -1,4 +1,3 @@
-import { JsonValue } from "@prisma/client/runtime/library";
 import { Request, Response } from "express";
 
 export interface IUserController {

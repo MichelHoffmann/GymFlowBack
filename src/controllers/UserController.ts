@@ -78,7 +78,6 @@ class UserController implements IUserController {
       }
 
       const user = await UserRepository.findByEmail(email);
-
       if (!user) {
         return res.status(400).json({
           message: "🔥Email não cadastrado",
@@ -86,7 +85,6 @@ class UserController implements IUserController {
       }
 
       const passwordIsCorrect = comparePassword(password, user.password!);
-
       if (!passwordIsCorrect) {
         return res.status(401).json({
           message: "🔥Senha invalida",
@@ -94,7 +92,6 @@ class UserController implements IUserController {
       }
 
       const token = generateToken(user.email);
-
       return res.status(200).json({
         message: "🔥Login concluido!",
         token, user: user.email
@@ -139,57 +136,20 @@ class UserController implements IUserController {
       });
     }
 
-    console.log(`USERUPDATED ANTES`)
-    console.log(email)
-    const user = await UserRepository.findByEmail(email);
-    console.log(`USERUPDATED DEPOIS:`, user)
-    
-    return res.status(200).json({message: "FOI CARALHO!!!!"})
-
-
-    // try {
-      // if (!user) {
-      //   return res.status(404).json({
-      //     message: "🔥Usuário não encontrado",
-      //   });
-      // }
-
-      // const userUpdated = await UserRepository.updateMeta(email, meta)
-      // console.log(`USERUPDATED`, userUpdated)
-
-      // if (!userUpdated) {
-      //   return res.status(400).json({
-      //     message: "🔥Não foi possivel atualizar a meta do usuario",
-      //   });
-      // }
-
-      // return res.status(200).json({
-      //   message: "🔥Meta atualizada com sucesso!",
-      //   user: {
-      //     name: userUpdated.name,
-      //     email: userUpdated.email,
-      //     meta: userUpdated.meta,
-      //     runs: userUpdated.runningHistory || [],
-      //   },
-      // });
-    // } catch (error) {
-    //   console.error("Erro detalhado:", error);
-
-    //   // Se for um erro do Prisma, adicione mais detalhes
-    //   if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    //     return res.status(500).json({
-    //       message: "🔥Erro de banco de dados",
-    //       code: error.code,
-    //       details: error.meta,
-    //     });
-    //   }
-
-    //   return res.status(500).json({
-    //     message: "🔥Erro ao atualizar meta",
-    //     error: error
-    //   });
-    // }
-
+    try {
+      const updatedUser = await UserRepository.updateMeta(email, meta);
+      if (!updatedUser) {
+        return res.status(404).json({
+          message: "🔥Não foi possível atualizar a meta!",
+        });
+      }
+      return res.status(200).json({message: "🔥Meta atualizada com sucesso!"});
+    } catch (error) {
+      return res.status(500).json({
+        message: "🔥Internal server error",
+        error,
+      });
+    }
   }}
 
 export default new UserController();
