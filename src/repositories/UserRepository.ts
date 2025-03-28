@@ -11,7 +11,7 @@ class UserRepository {
   createUser(user: IUser) {
     const { name, email, password } = user;
     return prisma.user.create({
-      data: { name, email, password, meta: null, runningHistory: []},
+      data: { name, email, password },
     });
   }
 
