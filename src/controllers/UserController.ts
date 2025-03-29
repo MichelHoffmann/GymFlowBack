@@ -19,6 +19,8 @@ class UserController implements IUserController {
         message: "User not found",
       });
     }
+    
+    console.log(user);
 
     return res.status(200).json({
       user: {
