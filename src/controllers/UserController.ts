@@ -24,9 +24,10 @@ class UserController implements IUserController {
 
     return res.status(200).json({
       user: {
-        meta: 27,
-        runs: user.runningHistory,
         name: user.name,
+        email: user.email,
+        meta: user.meta,
+        runs: user.runningHistory,
       },
     });
   }
